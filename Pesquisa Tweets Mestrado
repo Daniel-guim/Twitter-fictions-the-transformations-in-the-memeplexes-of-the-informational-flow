@@ -1,0 +1,58 @@
+#Instalando as bibliotecas
+!pip install pandas --quiet
+!pip install tweepy --quiet
+!pip install wordcloud --quiet
+
+#importando as bibliotecas
+import json
+import pandas as pd
+import tweepy as tw
+import matplotlib.pyplot as plt
+import requests
+import os
+
+#Autenticação
+auth = tw.OAuth1UserHandler(
+   "XXXXXXXXXX", "XXXXXXXXXX",
+   "XXXXXXXXXX", "XXXXXXXXXX")
+
+auth = tw.OAuth2BearerHandler("XXXXXXXXXX")
+
+api = tw.API(auth)
+
+client = tw.Client("XXXXXXXXXX", "XXXXXXXXXX", "XXXXXXXXXX",
+   "XXXXXXXXXX", "XXXXXXXXXX")
+   
+#Quatidade de Tweets postado (minuto, hora ou dia);
+client.get_all_tweets_count(query='from:"USUARIO_PESQUISADO" "PALAVRA-CHAVE" -is:retweet lang:pt', 
+                            end_time='2016-09-01T00:00:00Z',
+                            granularity='day', #(minute, hour e day)
+                            #next_token='',
+                            start_time='2014-10-25T00:00:01Z')
+                            
+#Pesquisa o "Tweet id" e o "text";
+client.search_all_tweets(query=['from:"USUARIO_PESQUISADO" "PALAVRA-CHAVE" -is:retweet lang:pt'],
+                         start_time='2014-10-25T00:00:01.000Z',
+                         end_time='2016-09-01T00:00:00.000Z', 
+                         expansions='author_id',
+                         max_results=500,
+                         tweet_fields=['created_at', 'geo', 'public_metrics', 'text'], 
+                         user_fields=['username', 'public_metrics', 'description', 'location'])
+
+#Pesquisa a "Data de publicação", o ID e os "Dados quantitativos ('retweet_count', 'reply_count', 'like_count', 'quote_count');
+tweets = client.search_all_tweets(query= ['from:"USUARIO_PESQUISADO" "PALAVRA-CHAVE" -is:retweet lang:pt'],
+                         end_time='2016-09-01T00:00:01.000Z',
+                         expansions='author_id',
+                         max_results=500,
+                         start_time='2014-10-25T00:00:01.000Z',
+                         tweet_fields=['created_at', 'geo', 'public_metrics', 'text'], 
+                         user_fields=['username', 'public_metrics', 'description', 'location'])
+    
+for tweet in tweets.data:
+    print('Data de publicação:')
+    print(tweet.created_at)
+    print('Id:')
+    print(tweet.id)
+    print('Dados quantitativos:')
+    print(tweet.public_metrics)
+    print('\n')
