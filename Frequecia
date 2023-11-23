@@ -1,1 +1,72 @@
 import re
+regex = r"[-'a-zA-ZÀ-ÖØ-öø-ÿ0-9]+"   # Considerar Acentuações
+documento = open('NOME_ARQUIVO.txt','r', encoding='utf-8')
+conteudo = documento.read()
+
+#print(conteudo)
+
+palavras = re.findall(regex, conteudo)
+for w in palavras:
+    print (w)
+print (f"Quantidade de palavras: {len(palavras)}")
+
+# identificacao de palavras
+
+palavras = re.findall(regex, conteudo)
+frequencias = dict([])
+
+# leitura das stopwords
+
+lista_stopwords = open("stopwords-pt.txt",'r', encoding='utf-8')
+stopwords = set([])
+for s in lista_stopwords.readlines():
+    stopwords.add(s.strip().lower())
+print(stopwords)
+
+# identificacao de palavras
+
+palavras = re.findall(regex, conteudo)
+frequencias = dict([])
+
+# quantidade de vezes no documento
+
+for w in palavras:
+    w = w.strip().lower()
+    if w not in stopwords:
+        if w not in frequencias:
+            frequencias[w] = 0
+        frequencias[w] += 1
+print (f"Tokens: {len(palavras)}, Vocabulario: {len(frequencias)}")
+print(frequencias)
+
+# imprimir as palavras ordenadas pela frequência
+
+classifica = sorted(frequencias, key=frequencias.get, reverse=True)
+for i in range(0,600000):
+    print (f"{classifica[i]} : {frequencias[classifica[i]]}")
+
+# identificacao de palavras
+
+palavras = re.findall(regex, conteudo)
+frequencia = dict([])
+
+frequencia['A']=0
+frequencia['B']=0
+frequencia['C']=0
+frequencia['D']=0
+frequencia['E']=0
+
+# quantidade de vezes no documento
+
+for w in palavras:
+    w = w.lower()
+    if w in frequencia:
+        frequencia[w] += 1
+print (f"Tokens: {len(palavras)}, Vocabulario: {len(frequencia)}")
+
+print (frequencia)
+
+classifica = sorted(frequencia, key=frequencia.get, reverse=True)
+for i in range(0,1277):
+    print (f"{frequencia[classifica[i]]} {classifica[i]}")
+
